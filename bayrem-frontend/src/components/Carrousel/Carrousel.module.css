@@ -1,0 +1,103 @@
+.carrousel {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  background: var(--primary);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(45,45,128,0.7) 0%, transparent 70%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 80px;
+  color: #fff;
+}
+
+.titre {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 12px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.sousTitre {
+  font-size: 1.2rem;
+  margin: 0 0 28px;
+  opacity: 0.9;
+}
+
+.btnVoir {
+  align-self: flex-start;
+  padding: 12px 28px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btnVoir:hover {
+  background: var(--accent-hover);
+}
+
+.fleche {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(45,45,128,0.5);
+  color: #fff;
+  border: none;
+  font-size: 2.5rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  line-height: 1;
+}
+
+.fleche:hover {
+  background: rgba(45,45,128,0.85);
+}
+
+.gauche { left: 16px; }
+.droite { right: 16px; }
+
+.points {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+}
+
+.point {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.45);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.actif {
+  background: var(--accent);
+}

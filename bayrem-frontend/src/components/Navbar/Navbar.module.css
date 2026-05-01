@@ -1,0 +1,120 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--primary);
+  box-shadow: 0 2px 12px rgba(45, 45, 128, 0.35);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.logoImg {
+  height: 54px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lien {
+  padding: 8px 16px;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  transition: color 0.2s, background 0.2s;
+}
+
+.lien:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+}
+
+.lienActif {
+  padding: 8px 16px;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.15);
+  font-weight: 600;
+}
+
+.lienAdmin {
+  padding: 7px 16px;
+  color: var(--accent);
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(72, 160, 170, 0.5);
+  margin-left: 8px;
+  transition: background 0.2s;
+}
+
+.lienAdmin:hover {
+  background: rgba(72, 160, 170, 0.15);
+}
+
+/* Burger */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.barre { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
+.barreOuverte1 { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transform: rotate(45deg) translate(5px, 5px); }
+.barreOuverte2 { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; opacity: 0; }
+.barreOuverte3 { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transform: rotate(-45deg) translate(5px, -5px); }
+
+.menuMobile {
+  display: flex;
+  flex-direction: column;
+  background: var(--primary);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.lienMobile {
+  padding: 16px 24px;
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.2s;
+}
+
+.lienMobile:hover {
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .burger { display: flex; }
+}

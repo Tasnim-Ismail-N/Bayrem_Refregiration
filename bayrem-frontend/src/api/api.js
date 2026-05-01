@@ -26,10 +26,26 @@ export const getProduits = async (params = {}) => {
   if (USE_MOCK) {
     await delay(300);
     let data = [...produitsMock];
-    if (params.search) data = data.filter(p => p.nom.toLowerCase().includes(params.search.toLowerCase()));
-    if (params.categorieId) data = data.filter(p => p.categorieId === params.categorieId);
-    if (params.promotion) data = data.filter(p => p.estEnPromotion);
-    if (params.tri === 'prix_asc') data.sort((a, b) => a.prix - b.prix);
+    if (params.search)      data = data.filter(p => p.nom.toLowerCase().includes(params.search.toLowerCase()));
+    if (params.categorieId) data = data.filter(p => p.categorieId === Number(params.categorieId));
+    // Conversion: l'utilisateur entre des valeurs comme 75 pour 75000 DT
+    // Comparer avec le prix promo si disponible, sinon le prix normal
+    if (params.prixMin !== undefined && params.prixMin !== '' && params.prixMin !== null) {
+      const min = Number(params.prixMin) * 1000;
+      if (!isNaN(min)) data = data.filter(p => {
+        const prixAComparer = p.estEnPromotion && p.prixPromo ? p.prixPromo : p.prix;
+        return prixAComparer >= min;
+      });
+    }
+    if (params.prixMax !== undefined && params.prixMax !== '' && params.prixMax !== null) {
+      const max = Number(params.prixMax) * 1000;
+      if (!isNaN(max)) data = data.filter(p => {
+        const prixAComparer = p.estEnPromotion && p.prixPromo ? p.prixPromo : p.prix;
+        return prixAComparer <= max;
+      });
+    }
+    if (params.promotion)   data = data.filter(p => p.estEnPromotion);
+    if (params.tri === 'prix_asc')  data.sort((a, b) => a.prix - b.prix);
     if (params.tri === 'prix_desc') data.sort((a, b) => b.prix - a.prix);
     const page = params.page || 1; const limite = params.limite || 12;
     return { total: data.length, page, limite, produits: data.slice((page-1)*limite, page*limite) };
@@ -83,5 +99,186 @@ export const login = async (email, motDePasse) => {
     body: JSON.stringify({ email, motDePasse })
   });
   if (!res.ok) throw new Error('Email ou mot de passe incorrect');
+  return res.json();
+};
+
+// ── Admin — Produits ─────────────────────────────────────
+export const adminGetProduits = async () => {
+  if (USE_MOCK) { await delay(200); return { total: produitsMock.length, produits: produitsMock }; }
+  const res = await fetch(`${BASE_URL}/admin/produits`, { headers: authHeader() });
+  if (!res.ok) throw new Error('Erreur serveur');
+  return res.json();
+};
+
+export const adminAddProduit = async (formData) => {
+  if (USE_MOCK) {
+    await delay(400);
+    // Extraire les données du FormData correctement
+    const data = {
+      nom: formData.get('nom'),
+      prix: formData.get('prix'),
+      prixPromo: formData.get('prixPromo'),
+      categorieId: formData.get('categorieId'),
+      description: formData.get('description'),
+    };
+    
+    // Calculer le prix promo basé sur le pourcentage
+    const prix = Number(data.prix) || 0;
+    const prixPromo = Number(data.prixPromo) || 0;
+    const estEnPromotion = prixPromo > 0;
+    const pourcentagePromo = estEnPromotion && prix > 0 ? Math.round(((prix - prixPromo) / prix) * 100) : null;
+    
+    // Créer le nouveau produit
+    const newId = Math.max(...produitsMock.map(p => p.id)) + 1;
+    const newProduit = {
+      id: newId,
+      nom: data.nom || 'Nouveau produit',
+      prix: prix,
+      prixPromo: prixPromo,
+      pourcentagePromo: pourcentagePromo,
+      description: data.description || '',
+      categorieId: Number(data.categorieId) || 1,
+      categorie: categoriesMock.find(c => c.id === Number(data.categorieId))?.nom || 'Non catégorisé',
+      estEnPromotion: estEnPromotion,
+      imageUrl: 'https://via.placeholder.com/150',
+      estEnStock: true,
+    };
+    
+    // Ajouter au mock
+    produitsMock.push(newProduit);
+    
+    return { id: newId, message: 'Produit créé avec succès', produit: newProduit };
+  }
+  const res = await fetch(`${BASE_URL}/admin/produits`, {
+    method: 'POST', headers: authHeader(), body: formData,
+  });
+  if (!res.ok) throw new Error('Erreur lors de la création');
+  return res.json();
+};
+
+export const adminUpdateProduit = async (id, formData) => {
+  if (USE_MOCK) {
+    await delay(400);
+    // Extraire les données du FormData correctement
+    const data = {
+      nom: formData.get('nom'),
+      prix: formData.get('prix'),
+      prixPromo: formData.get('prixPromo'),
+      categorieId: formData.get('categorieId'),
+      description: formData.get('description'),
+    };
+    
+    // Calculer le prix promo et le pourcentage
+    const prix = Number(data.prix) || 0;
+    const prixPromo = Number(data.prixPromo) || 0;
+    const estEnPromotion = prixPromo > 0;
+    const pourcentagePromo = estEnPromotion && prix > 0 ? Math.round(((prix - prixPromo) / prix) * 100) : null;
+    
+    // Mettre à jour le produit dans le mock
+    const index = produitsMock.findIndex(p => p.id === id);
+    if (index !== -1) {
+      produitsMock[index] = {
+        ...produitsMock[index],
+        nom: data.nom || produitsMock[index].nom,
+        prix: prix || produitsMock[index].prix,
+        prixPromo: prixPromo,
+        pourcentagePromo: pourcentagePromo,
+        description: data.description || produitsMock[index].description,
+        categorieId: Number(data.categorieId) || produitsMock[index].categorieId,
+        categorie: categoriesMock.find(c => c.id === Number(data.categorieId))?.nom || produitsMock[index].categorie,
+        estEnPromotion: estEnPromotion,
+      };
+    }
+    
+    return { message: 'Produit mis à jour avec succès' };
+  }
+  const res = await fetch(`${BASE_URL}/admin/produits/${id}`, {
+    method: 'PUT', headers: authHeader(), body: formData,
+  });
+  if (!res.ok) throw new Error('Erreur lors de la mise à jour');
+  return res.json();
+};
+
+export const adminDeleteProduit = async (id) => {
+  if (USE_MOCK) { await delay(300); return { message: 'Produit supprimé avec succès' }; }
+  const res = await fetch(`${BASE_URL}/admin/produits/${id}`, {
+    method: 'DELETE', headers: authHeader(),
+  });
+  if (!res.ok) throw new Error('Erreur lors de la suppression');
+  return res.json();
+};
+
+// ── Admin — Slider ───────────────────────────────────────
+export const adminAddSlide = async (data) => {
+  if (USE_MOCK) {
+    await delay(300);
+    const newId = Math.max(...sliderMock.map(s => s.id)) + 1;
+    return { id: newId, message: 'Slide ajouté avec succès' };
+  }
+  const res = await fetch(`${BASE_URL}/admin/slider`, {
+    method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Erreur lors de l\'ajout');
+  return res.json();
+};
+
+export const adminUpdateSlide = async (id, data) => {
+  if (USE_MOCK) { await delay(300); return { message: 'Slide mis à jour avec succès' }; }
+  const res = await fetch(`${BASE_URL}/admin/slider/${id}`, {
+    method: 'PUT', headers: { ...authHeader(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Erreur lors de la mise à jour');
+  return res.json();
+};
+
+export const adminDeleteSlide = async (id) => {
+  if (USE_MOCK) { await delay(300); return { message: 'Slide supprimé avec succès' }; }
+  const res = await fetch(`${BASE_URL}/admin/slider/${id}`, {
+    method: 'DELETE', headers: authHeader(),
+  });
+  if (!res.ok) throw new Error('Erreur lors de la suppression');
+  return res.json();
+};
+
+// ── Admin — Catégories ───────────────────────────────────
+export const adminGetCategories = async () => {
+  if (USE_MOCK) { await delay(150); return categoriesMock; }
+  const res = await fetch(`${BASE_URL}/admin/categories`, { headers: authHeader() });
+  if (!res.ok) throw new Error('Erreur serveur');
+  return res.json();
+};
+
+export const adminAddCategorie = async (data) => {
+  if (USE_MOCK) {
+    await delay(300);
+    const newId = Math.max(...categoriesMock.map(c => c.id)) + 1;
+    return { id: newId, message: 'Catégorie ajoutée avec succès' };
+  }
+  const res = await fetch(`${BASE_URL}/admin/categories`, {
+    method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Erreur lors de l\'ajout');
+  return res.json();
+};
+
+export const adminUpdateCategorie = async (id, data) => {
+  if (USE_MOCK) { await delay(300); return { message: 'Catégorie mise à jour avec succès' }; }
+  const res = await fetch(`${BASE_URL}/admin/categories/${id}`, {
+    method: 'PUT', headers: { ...authHeader(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Erreur lors de la mise à jour');
+  return res.json();
+};
+
+export const adminDeleteCategorie = async (id) => {
+  if (USE_MOCK) { await delay(300); return { message: 'Catégorie supprimée avec succès' }; }
+  const res = await fetch(`${BASE_URL}/admin/categories/${id}`, {
+    method: 'DELETE', headers: authHeader(),
+  });
+  if (!res.ok) throw new Error('Erreur lors de la suppression');
   return res.json();
 };

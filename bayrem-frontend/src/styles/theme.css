@@ -1,0 +1,18 @@
+/* src/styles/theme.css — Palette officielle Bayrem Réfrigération */
+:root {
+  --primary:       #2D2D80;   /* Bleu Marine */
+  --primary-dark:  #1e1e5c;   /* Bleu Marine foncé */
+  --primary-hover: #3a3a9a;   /* Bleu Marine survol */
+  --accent:        #48A0AA;   /* Bleu Cyan/Teal */
+  --accent-hover:  #3a8a94;   /* Teal foncé */
+
+  --bg:            #f4f4f6;
+  --white:         #ffffff;
+  --text:          #333333;
+  --text-light:    #666666;
+  --text-muted:    #999999;
+  --border:        #dddddd;
+
+  --shadow-sm: 0 2px 8px rgba(45, 45, 128, 0.08);
+  --shadow-md: 0 4px 20px rgba(45, 45, 128, 0.12);
+}

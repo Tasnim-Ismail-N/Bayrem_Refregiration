@@ -1,0 +1,70 @@
+.page {
+  min-height: 100vh;
+  background: var(--primary-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.carte {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 60px rgba(30,30,92,0.45);
+}
+
+.entete { text-align: center; margin-bottom: 36px; }
+
+.logoImg {
+  height: 70px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 16px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.titre { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin: 0 0 4px; }
+.sousTitre { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
+
+.formulaire { display: flex; flex-direction: column; gap: 20px; }
+
+.champGroupe { display: flex; flex-direction: column; gap: 6px; }
+
+.label { font-size: 0.85rem; font-weight: 600; color: var(--text-light); }
+
+.input {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.input:focus { border-color: var(--primary); }
+
+.erreur {
+  background: rgba(72,160,170,0.08);
+  color: var(--accent);
+  border: 1px solid rgba(72,160,170,0.3);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.btnConnexion {
+  padding: 14px;
+  background: var(--primary); color: #fff;
+  border: none; border-radius: 6px;
+  font-size: 1rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s;
+}
+.btnConnexion:hover:not(:disabled) { background: var(--accent); }
+.btnConnexion:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.hint { text-align: center; font-size: 0.78rem; color: #ccc; margin: 20px 0 0; }
