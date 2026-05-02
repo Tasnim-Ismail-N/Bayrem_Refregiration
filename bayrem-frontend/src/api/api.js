@@ -15,7 +15,10 @@ const authHeader = () => ({ Authorization: `Bearer ${localStorage.getItem('token
 
 // ── Slider ──────────────────────────────────────────────
 export const getSlider = async () => {
-  if (USE_MOCK) { await delay(200); return sliderMock; }
+  if (USE_MOCK) { 
+    await delay(200); 
+    return [...sliderMock].sort((a, b) => a.ordre - b.ordre); 
+  }
   const res = await fetch(`${BASE_URL}/slider`);
   if (!res.ok) throw new Error('Erreur serveur');
   return res.json();
@@ -209,32 +212,66 @@ export const adminDeleteProduit = async (id) => {
 };
 
 // ── Admin — Slider ───────────────────────────────────────
-export const adminAddSlide = async (data) => {
+export const adminAddSlide = async (formData) => {
   if (USE_MOCK) {
     await delay(300);
     const newId = Math.max(...sliderMock.map(s => s.id)) + 1;
-    return { id: newId, message: 'Slide ajouté avec succès' };
+    const newSlide = {
+      id: newId,
+      titre: formData.get('titre') || '',
+      sousTitre: formData.get('sousTitre') || '',
+      ordre: Number(formData.get('ordre')) || 1,
+      imageUrl: 'https://via.placeholder.com/1200x400'
+    };
+    sliderMock.push(newSlide);
+    return { id: newId, message: 'Slide ajouté avec succès', slide: newSlide };
   }
   const res = await fetch(`${BASE_URL}/admin/slider`, {
-    method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    method: 'POST', headers: authHeader(),
+    body: formData,
   });
   if (!res.ok) throw new Error('Erreur lors de l\'ajout');
   return res.json();
 };
 
-export const adminUpdateSlide = async (id, data) => {
-  if (USE_MOCK) { await delay(300); return { message: 'Slide mis à jour avec succès' }; }
+export const adminUpdateSlide = async (id, formData) => {
+  if (USE_MOCK) {
+    await delay(300);
+    const index = sliderMock.findIndex(s => s.id === id);
+    if (index !== -1) {
+      sliderMock[index] = {
+        ...sliderMock[index],
+        titre: formData.get('titre') !== null ? formData.get('titre') : sliderMock[index].titre,
+        sousTitre: formData.get('sousTitre') !== null ? formData.get('sousTitre') : sliderMock[index].sousTitre,
+        ordre: formData.get('ordre') !== null ? Number(formData.get('ordre')) : sliderMock[index].ordre,
+      };
+    }
+    return { message: 'Slide mis à jour avec succès' };
+  }
   const res = await fetch(`${BASE_URL}/admin/slider/${id}`, {
-    method: 'PUT', headers: { ...authHeader(), 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    method: 'PUT', headers: authHeader(),
+    body: formData,
   });
   if (!res.ok) throw new Error('Erreur lors de la mise à jour');
   return res.json();
 };
 
 export const adminDeleteSlide = async (id) => {
-  if (USE_MOCK) { await delay(300); return { message: 'Slide supprimé avec succès' }; }
+  if (USE_MOCK) { 
+    await delay(300); 
+    const index = sliderMock.findIndex(s => s.id === id);
+    if (index !== -1) {
+      const deletedOrdre = sliderMock[index].ordre;
+      sliderMock.splice(index, 1);
+      // Décaler l'ordre des slides suivants
+      sliderMock.forEach(s => {
+        if (s.ordre > deletedOrdre) {
+          s.ordre -= 1;
+        }
+      });
+    }
+    return { message: 'Slide supprimé avec succès' }; 
+  }
   const res = await fetch(`${BASE_URL}/admin/slider/${id}`, {
     method: 'DELETE', headers: authHeader(),
   });

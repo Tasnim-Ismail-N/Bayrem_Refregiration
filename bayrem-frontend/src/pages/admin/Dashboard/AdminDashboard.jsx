@@ -5,7 +5,7 @@ import logo from '../../../assets/logo.jpg';
 import {
   adminGetProduits, adminDeleteProduit, adminAddProduit, adminUpdateProduit,
   adminGetCategories, adminDeleteCategorie,
-  adminDeleteSlide, getSlider,
+  adminDeleteSlide, getSlider, adminAddSlide, adminUpdateSlide,
 } from '../../../api/api';
 import styles from './AdminDashboard.module.css';
 
@@ -23,7 +23,7 @@ export default function AdminDashboard() {
   const [message, setMessage]         = useState('');
 
   const [formulaire, setFormulaire]   = useState(null); // null | { mode: 'ajout'|'edit', data: {} }
-  
+  const [formulaireSlide, setFormulaireSlide] = useState(null);
   // État local pour le formulaire
   const [formValues, setFormValues]   = useState({
     prix: '',
@@ -34,15 +34,14 @@ export default function AdminDashboard() {
   // Calculer le prix promo
   const calculerPrixPromo = () => {
     const prix = Number(formValues.prix) || 0;
-    const pourcentage = Number(formValues.prixPromo) || 0;
-    if (pourcentage > 0 && pourcentage <= 100) {
+    const pourcentage = Number(formValues.pourcentagePromo) || 0;
+    if (formValues.estEnPromotion && pourcentage > 0 && pourcentage <= 100) {
       return Math.round(prix * (1 - pourcentage / 100));
     }
     return null;
   };
 
   const prixPromoCalcule = calculerPrixPromo();
-  const estEnPromotion = prixPromoCalcule !== null;
 
   const afficherMessage = (msg) => {
     setMessage(msg);
@@ -83,7 +82,8 @@ export default function AdminDashboard() {
   const supprimerSlide = async (id) => {
     if (!confirm('Supprimer ce slide ?')) return;
     await adminDeleteSlide(id);
-    setSlides(prev => prev.filter(s => s.id !== id));
+    const nouveauxSlides = await getSlider();
+    setSlides(nouveauxSlides);
     afficherMessage('Slide supprimé.');
   };
 
@@ -97,6 +97,19 @@ export default function AdminDashboard() {
   const soumettreFormulaire = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
+    
+    // Gérer les champs de promotion
+    if (!formValues.estEnPromotion) {
+      fd.set('pourcentagePromo', '');
+      fd.set('prixPromo', '');
+      fd.delete('estEnPromotion');
+    } else {
+      fd.set('estEnPromotion', 'true');
+      if (prixPromoCalcule !== null) {
+        fd.set('prixPromo', prixPromoCalcule);
+      }
+    }
+
     try {
       if (formulaire.mode === 'ajout') {
         await adminAddProduit(fd);
@@ -109,6 +122,24 @@ export default function AdminDashboard() {
       chargerDonnees();
     } catch {
       afficherMessage('Erreur lors de l\'enregistrement.');
+    }
+  };
+
+  const soumettreFormulaireSlide = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    try {
+      if (formulaireSlide.mode === 'ajout') {
+        await adminAddSlide(fd);
+        afficherMessage('Slide ajouté avec succès.');
+      } else {
+        await adminUpdateSlide(formulaireSlide.data.id, fd);
+        afficherMessage('Slide mis à jour avec succès.');
+      }
+      setFormulaireSlide(null);
+      chargerDonnees();
+    } catch {
+      afficherMessage('Erreur lors de l\'enregistrement du slide.');
     }
   };
 
@@ -190,30 +221,48 @@ export default function AdminDashboard() {
                           {categories.map(c => <option key={c.id} value={c.id}>{c.nom}</option>)}
                         </select>
                       </div>
-                      <div className={styles.champ}>
-                        <label>Pourcentage promo (%)</label>
-                        <input 
-                          name="pourcentagePromo" 
-                          type="number" 
-                          min="0" 
-                          max="100"
-                          defaultValue={formulaire.data.prixPromo || formulaire.data.pourcentagePromo || ''} 
-                          placeholder="Ex: 20 pour 20%"
-                          className={styles.inputForm}
-                          onChange={(e) => setFormValues(prev => ({ ...prev, pourcentagePromo: e.target.value }))}
-                        />
-                      </div>
-                      {prixPromoCalcule && (
-                        <div className={styles.champ}>
-                          <label>Prix après promo</label>
+                      <div className={styles.champ} style={{ display: 'flex', alignItems: 'center' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', margin: 0 }}>
                           <input 
-                            name="prixPromo" 
-                            type="number" 
-                            value={prixPromoCalcule}
-                            readOnly
-                            className={styles.inputForm}
+                            type="checkbox"
+                            name="estEnPromotion"
+                            checked={formValues.estEnPromotion}
+                            onChange={(e) => setFormValues(prev => ({ ...prev, estEnPromotion: e.target.checked }))}
+                            style={{ marginRight: '10px', width: 'auto' }}
                           />
-                        </div>
+                          Ce produit est en promotion
+                        </label>
+                      </div>
+
+                      {formValues.estEnPromotion && (
+                        <>
+                          <div className={styles.champ}>
+                            <label>Pourcentage promo (%)</label>
+                            <input 
+                              name="pourcentagePromo" 
+                              type="number" 
+                              min="0" 
+                              max="100"
+                              value={formValues.pourcentagePromo}
+                              placeholder="Ex: 20 pour 20%"
+                              className={styles.inputForm}
+                              onChange={(e) => setFormValues(prev => ({ ...prev, pourcentagePromo: e.target.value }))}
+                            />
+                          </div>
+                          {prixPromoCalcule !== null && (
+                            <div className={styles.champ}>
+                              <label>Prix après promo</label>
+                              <input 
+                                name="prixPromo" 
+                                type="number" 
+                                value={prixPromoCalcule}
+                                readOnly
+                                className={styles.inputForm}
+                                style={{ backgroundColor: '#f0f0f0', cursor: 'not-allowed' }}
+                              />
+                            </div>
+                          )}
+                        </>
                       )}
                       <div className={`${styles.champ} ${styles.champLarge}`}>
                         <label>Description</label>
@@ -257,10 +306,11 @@ export default function AdminDashboard() {
                                 className={styles.btnEditer}
                                 onClick={() => {
                                 setFormulaire({ mode: 'edit', data: p });
+                                const isPromo = !!p.prixPromo;
                                 setFormValues({ 
                                   prix: p.prix || '', 
-                                  pourcentagePromo: p.pourcentagePromo || p.prixPromo ? Math.round(((p.prix - (p.prixPromo || p.prix)) / p.prix) * 100) : '',
-                                  estEnPromotion: p.estEnPromotion || false 
+                                  pourcentagePromo: p.pourcentagePromo || (isPromo ? Math.round(((p.prix - p.prixPromo) / p.prix) * 100) : ''),
+                                  estEnPromotion: isPromo 
                                 });
                               }}
                               >
@@ -287,7 +337,44 @@ export default function AdminDashboard() {
               <section>
                 <div className={styles.barreSection}>
                   <h2 className={styles.titreSection}>Slides ({slides.length})</h2>
+                  <button
+                    className={styles.btnAjouter}
+                    onClick={() => setFormulaireSlide({ mode: 'ajout', data: {} })}
+                  >
+                    + Ajouter un slide
+                  </button>
                 </div>
+
+                {formulaireSlide && (
+                  <form className={styles.formulaire} onSubmit={soumettreFormulaireSlide}>
+                    <h3 className={styles.titreForm}>
+                      {formulaireSlide.mode === 'ajout' ? 'Nouveau slide' : 'Modifier le slide'}
+                    </h3>
+                    <div className={styles.grilleForm}>
+                      <div className={styles.champ}>
+                        <label>Titre</label>
+                        <input name="titre" defaultValue={formulaireSlide.data.titre || ''} required className={styles.inputForm} />
+                      </div>
+                      <div className={styles.champ}>
+                        <label>Sous-titre</label>
+                        <input name="sousTitre" defaultValue={formulaireSlide.data.sousTitre || ''} className={styles.inputForm} />
+                      </div>
+                      <div className={styles.champ}>
+                        <label>Ordre d'affichage</label>
+                        <input name="ordre" type="number" defaultValue={formulaireSlide.data.ordre || slides.length + 1} required className={styles.inputForm} />
+                      </div>
+                      <div className={styles.champ}>
+                        <label>Image</label>
+                        <input name="image" type="file" accept="image/*" className={styles.inputForm} />
+                      </div>
+                    </div>
+                    <div className={styles.actionsForm}>
+                      <button type="submit" className={styles.btnSauvegarder}>Sauvegarder</button>
+                      <button type="button" className={styles.btnAnnuler} onClick={() => setFormulaireSlide(null)}>Annuler</button>
+                    </div>
+                  </form>
+                )}
+
                 <div className={styles.grilleSlides}>
                   {slides.map(s => (
                     <div key={s.id} className={styles.carteSlide}>
@@ -297,9 +384,22 @@ export default function AdminDashboard() {
                         <p className={styles.sousTitreSlide}>{s.sousTitre}</p>
                         <p className={styles.ordreSlide}>Ordre : {s.ordre}</p>
                       </div>
-                      <button className={styles.btnSupprimer} onClick={() => supprimerSlide(s.id)}>
-                        Supprimer
-                      </button>
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                        <button 
+                          className={styles.btnEditer} 
+                          style={{ flex: 1 }}
+                          onClick={() => setFormulaireSlide({ mode: 'edit', data: s })}
+                        >
+                          Modifier
+                        </button>
+                        <button 
+                          className={styles.btnSupprimer} 
+                          style={{ flex: 1 }}
+                          onClick={() => supprimerSlide(s.id)}
+                        >
+                          Supprimer
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
