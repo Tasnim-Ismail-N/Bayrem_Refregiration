@@ -6,6 +6,8 @@ import { useProduitsVedette } from '../../hooks/useProduitsVedette';
 import { useCategories } from '../../hooks/useCategories';
 import HeroSlider from '../../components/HeroSlider/HeroSlider';
 import CarteProduit from '../../components/CarteProduit/CarteProduit';
+import CarouselProduits from '../../components/CarouselProduits/CarouselProduits';
+import HistoireMarque from '../../components/HistoireMarque/HistoireMarque';
 import styles from './Accueil.module.css';
 
 export default function Accueil() {
@@ -76,6 +78,12 @@ export default function Accueil() {
           )}
         </div>
       </section>
+
+      {/* ── Carrousel produits (défilement automatique infini) ── */}
+      <CarouselProduits />
+
+      {/* ── Section histoire marque (deux colonnes) ── */}
+      <HistoireMarque />
 
       {/* ── Bandeau contact ── */}
       <section className={styles.bandeau}>

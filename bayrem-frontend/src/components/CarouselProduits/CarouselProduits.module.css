@@ -1,0 +1,351 @@
+/* src/components/CarouselProduits/CarouselProduits.module.css */
+/* Carrousel 3D perspective infini avec hauteurs alternées et effets premium */
+
+.section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Titre avec underline animée                             */
+/* ──────────────────────────────────────────────────────── */
+
+.enTete {
+  max-width: 1400px;
+  margin: 0 auto 20px;
+  padding: 0 24px;
+  text-align: center;
+  position: relative;
+}
+
+.titre {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline animée — grandit au scroll */
+.underlineAnimee {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  border-radius: 2px;
+  animation: expandUnderline 0.8s ease-out 0.3s forwards;
+}
+
+@keyframes expandUnderline {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Marquee text — scrolling text strip                     */
+/* ──────────────────────────────────────────────────────── */
+
+.marqueeContainer {
+  width: 100%;
+  padding: 20px 0;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  margin-bottom: 40px;
+}
+
+.marqueeContent {
+  display: flex;
+  white-space: nowrap;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  letter-spacing: 1px;
+  animation: scroll 30s linear infinite;
+}
+
+.marqueeContent span {
+  padding-right: 40px;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Zone du carrousel avec flèches au survol               */
+/* ──────────────────────────────────────────────────────── */
+
+.zoneCarrousel {
+  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Piste défilante — conteneur flex des cartes            */
+/* ──────────────────────────────────────────────────────── */
+
+.piste {
+  display: flex;
+  gap: 20px;
+  will-change: transform;
+  /* Le transform est appliqué en JS via requestAnimationFrame */
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Carte produit — avec hauteurs alternées                */
+/* ──────────────────────────────────────────────────────── */
+
+.carte {
+  flex: 0 0 auto;
+  width: 280px;
+  /* Alternating heights : les indices pairs = 380px, impairs = 300px */
+  height: 350px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  /* Fade-in animation au chargement */
+  opacity: 0;
+  animation: fadeInCard 0.6s ease-out forwards;
+  /* 3D Perspective */
+  transform-style: preserve-3d;
+}
+
+/* Stagger animation delays pour fade-in */
+.carte:nth-child(1) { animation-delay: 0.05s; }
+.carte:nth-child(2) { animation-delay: 0.1s; }
+.carte:nth-child(3) { animation-delay: 0.15s; }
+.carte:nth-child(4) { animation-delay: 0.2s; }
+.carte:nth-child(5) { animation-delay: 0.25s; }
+.carte:nth-child(6) { animation-delay: 0.3s; }
+.carte:nth-child(n+7) { animation-delay: 0.35s; }
+
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hauteurs alternées — pairs/impairs */
+.carte:nth-child(even) { height: 300px; }
+.carte:nth-child(odd) { height: 380px; }
+
+/* Hover effects : tilt + scale + glow */
+.carte:hover {
+  box-shadow: 0 24px 48px rgba(249, 115, 22, 0.3),
+              0 0 40px rgba(249, 115, 22, 0.2);
+  z-index: 10;
+}
+
+/* Carte active au centre : scale 1.05 + spotlight */
+.carteActive {
+  transform: scale(1.05) !important;
+  box-shadow: 0 20px 60px rgba(249, 115, 22, 0.4),
+              0 0 50px rgba(249, 115, 22, 0.25);
+  z-index: 15;
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Image : remplissage avec object-fit: cover             */
+/* ──────────────────────────────────────────────────────── */
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.carte:hover .image {
+  transform: scale(1.08);
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Overlay gradient avec nom du produit                    */
+/* ──────────────────────────────────────────────────────── */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carte:hover .overlay {
+  opacity: 1;
+}
+
+.nomProduit {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.4;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Flèches de navigation                                   */
+/* ──────────────────────────────────────────────────────── */
+
+.fleche {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(26, 79, 122, 0.8);
+  color: #fff;
+  border: 2px solid rgba(26, 79, 122, 0.5);
+  border-radius: 8px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  transition: all 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.zoneCarrousel:hover .fleche {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fleche:hover {
+  background: rgba(26, 79, 122, 0.95);
+  box-shadow: 0 8px 24px rgba(26, 79, 122, 0.4);
+  border-color: var(--accent);
+}
+
+.gauche { left: 16px; }
+.droite { right: 16px; }
+
+/* ──────────────────────────────────────────────────────── */
+/* Points indicateurs (bas centre)                         */
+/* ──────────────────────────────────────────────────────── */
+
+.points {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 10;
+}
+
+.point {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.point:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.point.actif {
+  background: var(--accent);
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.6);
+  transform: scale(1.3);
+}
+
+/* ──────────────────────────────────────────────────────── */
+/* Responsive Design                                       */
+/* ──────────────────────────────────────────────────────── */
+
+/* Tablet (768px–1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .section { padding: 60px 0; }
+  .titre { font-size: 1.8rem; }
+  .carte { width: 240px; }
+  .carte:nth-child(even) { height: 260px; }
+  .carte:nth-child(odd) { height: 340px; }
+  .marqueeContainer { margin-bottom: 30px; }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 768px) {
+  .section { padding: 50px 0; }
+  .enTete { margin-bottom: 20px; }
+  .titre { font-size: 1.5rem; }
+  .zoneCarrousel { padding: 0 12px; }
+  .marqueeContainer { margin-bottom: 25px; padding: 15px 0; }
+
+  .carte {
+    width: 200px;
+    height: 280px;
+  }
+  .carte:nth-child(even) { height: 240px; }
+  .carte:nth-child(odd) { height: 300px; }
+
+  /* Flèches toujours visibles sur mobile */
+  .fleche {
+    opacity: 0.6;
+    pointer-events: auto;
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
+  }
+
+  .fleche:active {
+    background: rgba(26, 79, 122, 0.95);
+  }
+
+  .nomProduit { font-size: 0.85rem; }
+  .points { bottom: 16px; gap: 8px; }
+  .point { width: 8px; height: 8px; }
+}
+
+/* Très petit mobile */
+@media (max-width: 480px) {
+  .titre { font-size: 1.3rem; }
+  .carte { width: 160px; }
+  .carte:nth-child(even) { height: 220px; }
+  .carte:nth-child(odd) { height: 260px; }
+  .fleche { width: 40px; height: 40px; font-size: 1.1rem; }
+  .nomProduit { font-size: 0.75rem; padding: 16px; }
+  .marqueeContent { font-size: 0.8rem; }
+}
