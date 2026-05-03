@@ -1,9 +1,10 @@
 // src/pages/Accueil/Accueil.jsx
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useSlider } from '../../hooks/useSlider';
 import { useProduitsVedette } from '../../hooks/useProduitsVedette';
 import { useCategories } from '../../hooks/useCategories';
-import Carrousel from '../../components/Carrousel/Carrousel';
+import HeroSlider from '../../components/HeroSlider/HeroSlider';
 import CarteProduit from '../../components/CarteProduit/CarteProduit';
 import styles from './Accueil.module.css';
 
@@ -14,15 +15,16 @@ export default function Accueil() {
   const { categories, loading: loadingCategories } = useCategories();
 
   return (
-    <main>
-      {/* ── Carrousel ── */}
-      <section className={styles.sectionSlider}>
-        {loadingSlider ? (
-          <div className={styles.skeletonSlider} />
-        ) : (
-          <Carrousel slides={slides} />
-        )}
-      </section>
+    <>
+      <Helmet>
+        <title>Bayrem Réfrigération — Équipement Réfrigéré Professionnel</title>
+        <meta name="description" content="Vente d'équipements réfrigérés professionnels : armoires réfrigérées, comptoirs réfrigérés, congélateurs et équipements de cuisine pour votre établissement." />
+      </Helmet>      {/* ── Hero Slider ── */}
+      {loadingSlider ? (
+        <div className={styles.skeletonSlider} />
+      ) : (
+        <HeroSlider slides={slides} />
+      )}
 
       {/* ── Catégories ── */}
       <section className={styles.section}>
@@ -85,6 +87,6 @@ export default function Accueil() {
           </button>
         </div>
       </section>
-    </main>
+    </>
   );
 }

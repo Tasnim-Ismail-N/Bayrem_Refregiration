@@ -1,9 +1,11 @@
 // src/pages/Catalogue/Catalogue.jsx
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useProduits } from '../../hooks/useProduits';
 import { useCategories } from '../../hooks/useCategories';
 import CarteProduit from '../../components/CarteProduit/CarteProduit';
+import Breadcrumb from '../../components/ui/Breadcrumb';
 import styles from './Catalogue.module.css';
 
 const LIMITE = 12;
@@ -66,7 +68,12 @@ export default function Catalogue() {
 
   return (
     <main className={styles.page}>
+      <Helmet>
+        <title>Catalogue Produits — Bayrem Réfrigération</title>
+        <meta name="description" content="Découvrez notre gamme complète d'équipements réfrigérés professionnels : armoires, comptoirs, congélateurs et bien plus." />
+      </Helmet>
       <div className={styles.container}>
+        <Breadcrumb items={[{ label: 'Catalogue', to: '/produits' }]} />
         <h1 className={styles.titrePage}>Catalogue Produits</h1>
 
         <div className={styles.disposition}>

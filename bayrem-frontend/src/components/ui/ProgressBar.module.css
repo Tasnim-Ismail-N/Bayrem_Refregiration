@@ -1,0 +1,12 @@
+/* src/components/ui/ProgressBar.module.css */
+
+.progressBar {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  height: 3px;
+  background: var(--primary);
+  z-index: 999;
+  transition: width 0.1s ease;
+  width: 0%;
+}

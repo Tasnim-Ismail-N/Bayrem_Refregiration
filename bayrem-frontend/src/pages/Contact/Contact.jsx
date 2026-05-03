@@ -1,4 +1,5 @@
 // src/pages/Contact/Contact.jsx
+import { Helmet } from 'react-helmet-async';
 import { useMagasin } from '../../hooks/useMagasin';
 import styles from './Contact.module.css';
 
@@ -7,6 +8,10 @@ export default function Contact() {
 
   if (loading) return (
     <main className={styles.page}>
+      <Helmet>
+        <title>Contact & Localisation — Bayrem Réfrigération</title>
+        <meta name="description" content="Visitez notre showroom ou contactez-nous pour toute demande d'information sur nos produits réfrigérés professionnels." />
+      </Helmet>
       <div className={styles.container}>
         <div className={styles.skeleton} />
       </div>
@@ -15,6 +20,10 @@ export default function Contact() {
 
   if (erreur || !magasin) return (
     <main className={styles.page}>
+      <Helmet>
+        <title>Contact & Localisation — Bayrem Réfrigération</title>
+        <meta name="description" content="Visitez notre showroom ou contactez-nous pour toute demande d'information sur nos produits réfrigérés professionnels." />
+      </Helmet>
       <div className={styles.container}>
         <p className={styles.erreur}>Impossible de charger les informations du magasin.</p>
       </div>
@@ -23,6 +32,10 @@ export default function Contact() {
 
   return (
     <main className={styles.page}>
+      <Helmet>
+        <title>Contact & Localisation — Bayrem Réfrigération</title>
+        <meta name="description" content="Visitez notre showroom ou contactez-nous pour toute demande d'information sur nos produits réfrigérés professionnels." />
+      </Helmet>
       <div className={styles.container}>
         <h1 className={styles.titrePage}>Contact & Localisation</h1>
 

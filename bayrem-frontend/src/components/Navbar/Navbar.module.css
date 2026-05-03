@@ -1,19 +1,45 @@
 .header {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background: var(--primary);
-  box-shadow: 0 2px 12px rgba(45, 45, 128, 0.35);
+  transition: all 0.35s ease;
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.header.headerScrolled {
+  background: var(--white);
+  box-shadow: var(--shadow-md);
+}
+
+.header.headerScrolled .lien,
+.header.headerScrolled .lienActif {
+  color: var(--text);
+}
+
+.header.headerScrolled .lienActif {
+  background: var(--bg);
+  color: var(--primary);
+}
+
+.header.headerHidden {
+  transform: translateY(-100%);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
+  width: 100%;
   height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24px;
 }
 
 .logo {
@@ -23,6 +49,7 @@
   padding: 4px;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .logoImg {
@@ -36,20 +63,31 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: 1;
+}
+
+.dropdownWrapper {
+  position: relative;
 }
 
 .lien {
   padding: 8px 16px;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   border-radius: 4px;
   font-size: 0.95rem;
   transition: color 0.2s, background 0.2s;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
 }
 
 .lien:hover {
   color: #fff;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .lienActif {
@@ -58,23 +96,131 @@
   text-decoration: none;
   border-radius: 4px;
   font-size: 0.95rem;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   font-weight: 600;
 }
 
-.lienAdmin {
-  padding: 7px 16px;
-  color: var(--accent);
-  text-decoration: none;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  border: 1px solid rgba(72, 160, 170, 0.5);
-  margin-left: 8px;
-  transition: background 0.2s;
+/* Dropdown catégories */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--shadow-md);
+  min-width: 240px;
+  overflow: hidden;
+  animation: slideDown 0.2s ease;
+  z-index: 1001;
 }
 
-.lienAdmin:hover {
-  background: rgba(72, 160, 170, 0.15);
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: none;
+  background: none;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.dropdownItem:hover {
+  background: var(--bg);
+  color: var(--primary);
+}
+
+/* Actions (loupe + téléphone) */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.btnSearch {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.btnSearch:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btnTheme {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: color 0.3s, background 0.3s;
+}
+
+.btnTheme:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btnPhone {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+  flex-shrink: 0;
+  height: 36px;
+  line-height: 1;
+}
+
+.btnPhone:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btnPhone svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.phoneText {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
 }
 
 /* Burger */
@@ -86,35 +232,88 @@
   border: none;
   cursor: pointer;
   padding: 4px;
+  flex-shrink: 0;
 }
 
-.barre { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transition: all 0.3s; }
-.barreOuverte1 { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transform: rotate(45deg) translate(5px, 5px); }
-.barreOuverte2 { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; opacity: 0; }
-.barreOuverte3 { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; transform: rotate(-45deg) translate(5px, -5px); }
+.barre {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+.barreOuverte1 {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.barreOuverte2 {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  opacity: 0;
+}
+
+.barreOuverte3 {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transform: rotate(-45deg) translate(5px, -5px);
+}
 
 .menuMobile {
   display: flex;
   flex-direction: column;
   background: var(--primary);
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 70px;
+  animation: slideDown 0.2s ease;
 }
 
 .lienMobile {
   padding: 16px 24px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
   font-size: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   transition: background 0.2s;
+  display: block;
 }
 
 .lienMobile:hover {
-  background: rgba(255,255,255,0.07);
+  background: rgba(255, 255, 255, 0.07);
   color: #fff;
 }
 
+/* Desktop */
+@media (min-width: 1024px) {
+  .btnPhone {
+    display: flex;
+  }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
-  .nav { display: none; }
-  .burger { display: flex; }
+  .nav {
+    display: none;
+  }
+  .burger {
+    display: flex;
+  }
+  .actions {
+    order: -1;
+  }
+  .btnPhone {
+    display: none !important;
+  }
 }

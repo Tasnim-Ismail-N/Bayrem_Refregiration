@@ -1,18 +1,33 @@
 /* src/styles/theme.css — Palette officielle Bayrem Réfrigération */
 :root {
-  --primary:       #2D2D80;   /* Bleu Marine */
-  --primary-dark:  #1e1e5c;   /* Bleu Marine foncé */
-  --primary-hover: #3a3a9a;   /* Bleu Marine survol */
-  --accent:        #48A0AA;   /* Bleu Cyan/Teal */
-  --accent-hover:  #3a8a94;   /* Teal foncé */
+  --primary:       #1a4f7a;   /* Bleu Principal */
+  --primary-dark:  #133a56;   /* Bleu foncé */
+  --primary-hover: #2a6a99;   /* Bleu survol */
+  --accent:        #f97316;   /* Orange accent */
+  --accent-hover:  #ea580c;   /* Orange foncé */
 
-  --bg:            #f4f4f6;
+  --bg:            #f8f9fa;
   --white:         #ffffff;
-  --text:          #333333;
-  --text-light:    #666666;
-  --text-muted:    #999999;
-  --border:        #dddddd;
+  --text:          #1f2937;
+  --text-light:    #6b7280;
+  --text-muted:    #9ca3af;
+  --border:        #e5e7eb;
 
-  --shadow-sm: 0 2px 8px rgba(45, 45, 128, 0.08);
-  --shadow-md: 0 4px 20px rgba(45, 45, 128, 0.12);
+  --shadow-sm:  0 2px 8px rgba(26, 79, 122, 0.08);
+  --shadow-md:  0 4px 20px rgba(26, 79, 122, 0.12);
+  --shadow-lg:  0 10px 40px rgba(26, 79, 122, 0.15);
+}
+
+/* Mode sombre */
+[data-theme="dark"] {
+  --bg:            #0f172a;
+  --white:         #1e293b;
+  --text:          #f1f5f9;
+  --text-light:    #cbd5e1;
+  --text-muted:    #94a3b8;
+  --border:        #334155;
+
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md:  0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg:  0 10px 40px rgba(0, 0, 0, 0.5);
 }

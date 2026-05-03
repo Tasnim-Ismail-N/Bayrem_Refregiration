@@ -1,6 +1,7 @@
 // src/pages/DetailProduit/DetailProduit.jsx
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useProduitDetail } from '../../hooks/useProduitDetail';
 import { useProduits } from '../../hooks/useProduits';
 import CarteProduit from '../../components/CarteProduit/CarteProduit';
@@ -12,6 +13,22 @@ export default function DetailProduit() {
   const [imageActive, setImageActive] = useState(0);
 
   const { produit, loading, erreur } = useProduitDetail(id);
+
+  // Fetch all products in same category for navigation
+  const { produits: produitsCategorie } = useProduits(
+    produit?.categorieId ? { categorieId: produit.categorieId, limite: 100 } : {}
+  );
+
+  // Calculate previous/next navigation
+  const navigation = useMemo(() => {
+    if (!produit || !produitsCategorie.length) return { prev: null, next: null };
+
+    const currentIndex = produitsCategorie.findIndex(p => p.id === parseInt(id));
+    return {
+      prev: currentIndex > 0 ? produitsCategorie[currentIndex - 1] : null,
+      next: currentIndex < produitsCategorie.length - 1 ? produitsCategorie[currentIndex + 1] : null,
+    };
+  }, [produit, produitsCategorie, id]);
 
   const { produits: similaires } = useProduits(
     produit?.produitsSimilaires?.length
@@ -48,6 +65,10 @@ export default function DetailProduit() {
 
   return (
     <main className={styles.page}>
+      <Helmet>
+        <title>{produit?.nom} — Bayrem Réfrigération</title>
+        <meta name="description" content={produit?.description?.substring(0, 160) || "Découvrez ce produit réfrigéré professionnel"} />
+      </Helmet>
       <div className={styles.container}>
         {/* Fil d'ariane */}
         <nav className={styles.breadcrumb}>
@@ -151,6 +172,34 @@ export default function DetailProduit() {
                 Retour au catalogue
               </button>
             </div>
+
+            {/* Navigation produits précédent/suivant */}
+            {(navigation.prev || navigation.next) && (
+              <div className={styles.navButtons}>
+                {navigation.prev ? (
+                  <button
+                    className={styles.btnNavProd}
+                    onClick={() => navigate(`/produits/${navigation.prev.id}`)}
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Produit précédent
+                  </button>
+                ) : (
+                  <div />
+                )}
+                {navigation.next ? (
+                  <button
+                    className={styles.btnNavProd}
+                    onClick={() => navigate(`/produits/${navigation.next.id}`)}
+                  >
+                    Produit suivant
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                  </button>
+                ) : (
+                  <div />
+                )}
+              </div>
+            )}
           </div>
         </div>
 

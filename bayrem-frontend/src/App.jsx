@@ -1,6 +1,7 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
+import Layout from './components/Layout/Layout';
 import Footer from './components/Footer/Footer';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import Accueil from './pages/Accueil/Accueil';
@@ -14,27 +15,29 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-      <Routes>
-        {/* ── Pages publiques ── */}
-        <Route path="/" element={<Accueil />} />
-        <Route path="/produits" element={<Catalogue />} />
-        <Route path="/produits/:id" element={<DetailProduit />} />
-        <Route path="/contact" element={<Contact />} />
+      <Layout>
+        <Routes>
+          {/* ── Pages publiques ── */}
+          <Route path="/" element={<Accueil />} />
+          <Route path="/produits" element={<Catalogue />} />
+          <Route path="/produits/:id" element={<DetailProduit />} />
+          <Route path="/contact" element={<Contact />} />
 
-        {/* ── Admin ── */}
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <PrivateRoute>
-              <AdminDashboard />
-            </PrivateRoute>
-          }
-        />
+          {/* ── Admin ── */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <PrivateRoute>
+                <AdminDashboard />
+              </PrivateRoute>
+            }
+          />
 
-        {/* ── Fallback ── */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* ── Fallback ── */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
       <Footer />
     </BrowserRouter>
   );
