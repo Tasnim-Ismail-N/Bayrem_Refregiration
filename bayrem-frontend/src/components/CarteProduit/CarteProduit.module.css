@@ -1,17 +1,18 @@
 .carte {
   display: flex;
   flex-direction: column;
-  background: var(--white);
-  border-radius: 12px;
-  box-shadow: var(--shadow-sm);
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .carte:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
 }
 
 /* Image wrapper */
@@ -73,9 +74,9 @@
 
 .nom {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--text);
+  color: #111827;
   line-height: 1.4;
   /* Tronquer à 2 lignes */
   display: -webkit-box;
@@ -94,9 +95,9 @@
 }
 
 .prixNormal {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  color: var(--primary);
+  color: #1a4f7a;
 }
 
 .prixPromo {

@@ -74,6 +74,50 @@
 
 .iconeCategorie { width: 60px; height: 60px; object-fit: contain; }
 
+/* Bannière Promotionnelle */
+.bannierePromo {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  border-radius: 12px;
+  padding: 32px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px 0 48px 0;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.25);
+}
+
+.bannierePromoTexte h3 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.bannierePromoTexte p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.bannierePromoBtn {
+  background-color: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-left: 24px;
+}
+
+.bannierePromoBtn:hover {
+  background-color: #fff;
+  color: #0891b2;
+}
+
 /* Produits */
 .grilleProduits {
   display: grid;
@@ -137,6 +181,20 @@
   .grilleProduits { grid-template-columns: repeat(2, 1fr); }
   .enteteSection { flex-direction: column; align-items: flex-start; gap: 8px; }
   .skeletonSlider { height: 260px; }
+
+  .bannierePromo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px;
+  }
+  .bannierePromoBtn {
+    margin-left: 0;
+    width: 100%;
+  }
+  .bannierePromoTexte h3 {
+    font-size: 1.3rem;
+  }
 }
 @media (max-width: 480px) {
   .grilleProduits { grid-template-columns: 1fr; }

@@ -1,3 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary: #0A192F;       /* Deep Navy Blue */
+  --secondary: #00B4D8;     /* Ice Blue */
+  --accent: #F97316;        /* Orange Accent */
+  --bg-light: #F8FAFC;      /* Light gray background */
+  --bg-white: #FFFFFF;      
+  --text-dark: #1E293B;     /* Slate 800 */
+  --text-muted: #64748B;    /* Slate 500 */
+  --border-light: #E2E8F0;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -11,9 +24,9 @@ html {
 }
 
 body {
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -34,7 +47,7 @@ a {
   text-decoration: none;
 }
 
-button {
+button, input, select, textarea {
   font-family: inherit;
 }
 

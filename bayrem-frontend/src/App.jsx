@@ -19,7 +19,8 @@ function App() {
         <Routes>
           {/* ── Pages publiques ── */}
           <Route path="/" element={<Accueil />} />
-          <Route path="/produits" element={<Catalogue />} />
+          <Route path="/catalogue" element={<Catalogue />} />
+          <Route path="/catalogue/:categorieSlug" element={<Catalogue />} />
           <Route path="/produits/:id" element={<DetailProduit />} />
           <Route path="/contact" element={<Contact />} />
 

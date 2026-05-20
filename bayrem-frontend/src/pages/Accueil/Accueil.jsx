@@ -53,6 +53,22 @@ export default function Accueil() {
         </div>
       </section>
 
+      {/* ── Bannière Promotionnelle ── */}
+      <div className={styles.container}>
+        <div className={styles.bannierePromo}>
+          <div className={styles.bannierePromoTexte}>
+            <h3>Promotions Exceptionnelles — Jusqu'à -20% sur tout le stock</h3>
+            <p>Offres limitées · Expédition sous 48h · Paiement en 3x sans frais</p>
+          </div>
+          <button 
+            className={styles.bannierePromoBtn} 
+            onClick={() => navigate('/produits?promotion=true')}
+          >
+            Voir les offres
+          </button>
+        </div>
+      </div>
+
       {/* ── Produits vedettes ── */}
       <section className={`${styles.section} ${styles.sectionGrise}`}>
         <div className={styles.container}>

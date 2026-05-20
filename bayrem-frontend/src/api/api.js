@@ -31,7 +31,7 @@ export const getProduits = async (params = {}) => {
     let data = [...produitsMock];
     if (params.search)      data = data.filter(p => p.nom.toLowerCase().includes(params.search.toLowerCase()));
     if (params.categorieId) data = data.filter(p => p.categorieId === Number(params.categorieId));
-    // Conversion: l'utilisateur entre des valeurs comme 75 pour 75000 DT
+    if (params.sousCategorieId) data = data.filter(p => p.sousCategorieId === Number(params.sousCategorieId));
     // Comparer avec le prix promo si disponible, sinon le prix normal
     if (params.prixMin !== undefined && params.prixMin !== '' && params.prixMin !== null) {
       const min = Number(params.prixMin) * 1000;

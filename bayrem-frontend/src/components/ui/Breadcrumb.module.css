@@ -1,6 +1,6 @@
 /* src/components/ui/Breadcrumb.module.css */
 .breadcrumb {
-  padding: 12px 0;
+  padding: 8px 0;
 }
 
 .list {
@@ -9,30 +9,37 @@
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.875rem;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13.5px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .link {
-  color: var(--primary);
+  color: #64748B;
   text-decoration: none;
-  transition: color 0.2s;
+  font-weight: 600;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 .link:hover {
-  color: var(--primary-hover);
-  text-decoration: underline;
+  color: #00AEEF;
 }
 
 .separator {
-  color: var(--border);
+  color: #cbd5e1;
   flex-shrink: 0;
 }
 
 .current {
-  color: var(--text-light);
-  font-weight: 500;
+  color: #1E293B;
+  font-weight: 700;
 }

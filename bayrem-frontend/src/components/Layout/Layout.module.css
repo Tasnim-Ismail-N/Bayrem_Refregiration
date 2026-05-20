@@ -7,6 +7,11 @@
 
 .main {
   flex: 1;
-  padding-top: 70px;
+  padding-top: 154px; /* 36px topbar + 70px mainbar + 48px categoriesBar */
   padding-bottom: 0;
+  transition: padding-top 0.3s ease;
+}
+
+.mainScrolled {
+  padding-top: 118px; /* 70px mainbar + 48px categoriesBar */
 }
