@@ -6,8 +6,9 @@ import styles from './WhatsAppButton.module.css';
 
 export default function WhatsAppButton() {
   const location = useLocation();
-  const produitId = location.pathname.split('/').pop();
-  const { produit } = useProduitDetail(produitId, /^\/produits\/\d+$/.test(location.pathname));
+  const isProductPage = /^\/produits\/\d+$/.test(location.pathname);
+  const produitId = isProductPage ? location.pathname.split('/').pop() : null;
+  const { produit } = useProduitDetail(produitId);
 
   const getMessage = () => {
     if (produit && /^\/produits\/\d+$/.test(location.pathname)) {

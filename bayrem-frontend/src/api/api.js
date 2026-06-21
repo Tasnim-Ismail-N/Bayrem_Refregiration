@@ -48,8 +48,16 @@ export const getProduits = async (params = {}) => {
       });
     }
     if (params.promotion)   data = data.filter(p => p.estEnPromotion);
-    if (params.tri === 'prix_asc')  data.sort((a, b) => a.prix - b.prix);
-    if (params.tri === 'prix_desc') data.sort((a, b) => b.prix - a.prix);
+    if (params.tri === 'prix_asc')  data.sort((a, b) => {
+      const pa = a.estEnPromotion && a.prixPromo ? a.prixPromo : a.prix;
+      const pb = b.estEnPromotion && b.prixPromo ? b.prixPromo : b.prix;
+      return pa - pb;
+    });
+    if (params.tri === 'prix_desc') data.sort((a, b) => {
+      const pa = a.estEnPromotion && a.prixPromo ? a.prixPromo : a.prix;
+      const pb = b.estEnPromotion && b.prixPromo ? b.prixPromo : b.prix;
+      return pb - pa;
+    });
     const page = params.page || 1; const limite = params.limite || 12;
     return { total: data.length, page, limite, produits: data.slice((page-1)*limite, page*limite) };
   }
@@ -203,7 +211,14 @@ export const adminUpdateProduit = async (id, formData) => {
 };
 
 export const adminDeleteProduit = async (id) => {
-  if (USE_MOCK) { await delay(300); return { message: 'Produit supprimé avec succès' }; }
+  if (USE_MOCK) {
+    await delay(300);
+    const index = produitsMock.findIndex(p => p.id === id);
+    if (index !== -1) {
+      produitsMock.splice(index, 1);
+    }
+    return { message: 'Produit supprimé avec succès' };
+  }
   const res = await fetch(`${BASE_URL}/admin/produits/${id}`, {
     method: 'DELETE', headers: authHeader(),
   });
@@ -312,7 +327,14 @@ export const adminUpdateCategorie = async (id, data) => {
 };
 
 export const adminDeleteCategorie = async (id) => {
-  if (USE_MOCK) { await delay(300); return { message: 'Catégorie supprimée avec succès' }; }
+  if (USE_MOCK) {
+    await delay(300);
+    const index = categoriesMock.findIndex(c => c.id === id);
+    if (index !== -1) {
+      categoriesMock.splice(index, 1);
+    }
+    return { message: 'Catégorie supprimée avec succès' };
+  }
   const res = await fetch(`${BASE_URL}/admin/categories/${id}`, {
     method: 'DELETE', headers: authHeader(),
   });

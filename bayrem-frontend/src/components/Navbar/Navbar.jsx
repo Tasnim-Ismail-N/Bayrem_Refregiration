@@ -244,6 +244,54 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* ── MOBILE NAV DRAWER ── */}
+      {menuOuvert && (
+        <div className={styles.mobileNavOverlay} onClick={() => setMenuOuvert(false)}>
+          <div className={styles.mobileNavDrawer} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.mobileNavHeader}>
+              <button className={styles.logoWrapperMobile} onClick={() => { navigate('/'); setMenuOuvert(false); }} title="Accueil">
+                <img src={logo} alt="Bayrem Réfrigération" className={styles.logoImgMobile} />
+              </button>
+            </div>
+            
+            {/* Search Bar in Mobile Menu */}
+            <form className={styles.mobileSearchContainer} onSubmit={(e) => { handleSearch(e); setMenuOuvert(false); }}>
+              <input 
+                type="text" 
+                placeholder="Rechercher..." 
+                className={styles.mobileSearchInput} 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <button type="submit" className={styles.mobileSearchBtn}>
+                <Search size={18} />
+              </button>
+            </form>
+
+            <div className={styles.mobileNavLinks}>
+              <NavLink to="/" className={styles.mobileNavLink} onClick={() => setMenuOuvert(false)}>
+                Accueil
+              </NavLink>
+              <NavLink to="/contact" className={styles.mobileNavLink} onClick={() => setMenuOuvert(false)}>
+                Qui Sommes Nous ? / Contact
+              </NavLink>
+              <div className={styles.mobileDivider}></div>
+              <p className={styles.mobileNavTitle}>Nos Catégories</p>
+              {CATEGORIES.map(cat => (
+                <div key={cat.id} className={styles.mobileCatItem}>
+                  <button 
+                    className={styles.mobileCatHeader}
+                    onClick={() => { navigate(`/catalogue/${cat.slug}`); setMenuOuvert(false); }}
+                  >
+                    <span>{cat.nom}</span>
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

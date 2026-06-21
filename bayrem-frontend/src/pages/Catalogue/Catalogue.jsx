@@ -4,6 +4,7 @@ import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Grid2x2, Grid3x3, LayoutGrid, Search, Flame, Snowflake, Pizza, Store, Coffee, Menu, Building, Cake, Croissant, PartyPopper, Beef, Columns, Utensils, Smartphone, ShoppingBag, Thermometer, Box, CircleDollarSign, Tag } from 'lucide-react';
 import { useProduits } from '../../hooks/useProduits';
+import { useDebounce } from '../../hooks/useDebounce';
 import CarteProduit from '../../components/CarteProduit/CarteProduit';
 import Breadcrumb from '../../components/ui/Breadcrumb';
 import { CATEGORIES } from '../../data/categories';
@@ -57,6 +58,10 @@ export default function Catalogue() {
   });
 
   const [gridLayout, setGridLayout] = useState('grid-3');
+  const [inputPrixMin, setInputPrixMin] = useState(filtres.prixMin);
+  const [inputPrixMax, setInputPrixMax] = useState(filtres.prixMax);
+  const debouncedPrixMin = useDebounce(inputPrixMin, 400);
+  const debouncedPrixMax = useDebounce(inputPrixMax, 400);
   // Visual contextual filters states
   const [selectedCapacites, setSelectedCapacites] = useState([]);
   const [selectedTypesFroid, setSelectedTypesFroid] = useState([]);
@@ -76,6 +81,28 @@ export default function Catalogue() {
       limite: Number(searchParams.get('limite')) || 12,
     }));
   }, [categorieSlug, searchParams, currentCategory]);
+
+  // Synchroniser les inputs avec les filtres quand ces derniers changent (ex: réinitialisation)
+  useEffect(() => {
+    setInputPrixMin(filtres.prixMin);
+  }, [filtres.prixMin]);
+
+  useEffect(() => {
+    setInputPrixMax(filtres.prixMax);
+  }, [filtres.prixMax]);
+
+  // Appliquer le filtre de prix après le debounce
+  useEffect(() => {
+    if (debouncedPrixMin !== filtres.prixMin) {
+      appliquerFiltre('prixMin', debouncedPrixMin);
+    }
+  }, [debouncedPrixMin]);
+
+  useEffect(() => {
+    if (debouncedPrixMax !== filtres.prixMax) {
+      appliquerFiltre('prixMax', debouncedPrixMax);
+    }
+  }, [debouncedPrixMax]);
 
   const { produits, loading, erreur, total } = useProduits(
     Object.fromEntries(
@@ -186,9 +213,9 @@ export default function Catalogue() {
                 Filtrer par Prix
               </h3>
               <div className={styles.rangePrix}>
-                <input type="number" placeholder="Min" value={filtres.prixMin} onChange={e => appliquerFiltre('prixMin', e.target.value)} className={styles.inputPrix} />
+                <input type="number" placeholder="Min" value={inputPrixMin} onChange={e => setInputPrixMin(e.target.value)} className={styles.inputPrix} />
                 <span style={{color: '#9ca3af'}}>-</span>
-                <input type="number" placeholder="Max" value={filtres.prixMax} onChange={e => appliquerFiltre('prixMax', e.target.value)} className={styles.inputPrix} />
+                <input type="number" placeholder="Max" value={inputPrixMax} onChange={e => setInputPrixMax(e.target.value)} className={styles.inputPrix} />
               </div>
             </div>
 

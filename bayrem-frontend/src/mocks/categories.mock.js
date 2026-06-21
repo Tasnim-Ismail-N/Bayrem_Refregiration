@@ -2,22 +2,33 @@
 export const categoriesMock = [
   {
     id: 1,
-    nom: 'Armoires réfrigérées',
-    iconeUrl: 'https://placehold.co/80x80?text=Armoires',
+    nom: 'Équipement Froid',
+    iconeUrl: 'https://placehold.co/80x80?text=Froid',
   },
   {
     id: 2,
-    nom: 'Comptoirs réfrigérés',
-    iconeUrl: 'https://placehold.co/80x80?text=Comptoirs',
+    nom: 'Superette',
+    iconeUrl: 'https://placehold.co/80x80?text=Superette',
   },
   {
     id: 3,
-    nom: 'Congélateurs',
-    iconeUrl: 'https://placehold.co/80x80?text=Congelateurs',
+    nom: 'Café',
+    iconeUrl: 'https://placehold.co/80x80?text=Cafe',
   },
   {
     id: 4,
-    nom: 'Équipements de cuisine',
-    iconeUrl: 'https://placehold.co/80x80?text=Cuisine',
+    nom: 'Snack',
+    iconeUrl: 'https://placehold.co/80x80?text=Snack',
+  },
+  {
+    id: 6,
+    nom: 'Pizzeria',
+    iconeUrl: 'https://placehold.co/80x80?text=Pizzeria',
+  },
+  {
+    id: 99,
+    nom: 'Par Métier',
+    iconeUrl: 'https://placehold.co/80x80?text=Metier',
   },
 ];
+

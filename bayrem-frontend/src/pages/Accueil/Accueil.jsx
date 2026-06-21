@@ -42,7 +42,7 @@ export default function Accueil() {
                 <button
                   key={cat.id}
                   className={styles.carteCategorie}
-                  onClick={() => navigate(`/produits?categorieId=${cat.id}`)}
+                  onClick={() => navigate(`/catalogue?categorieId=${cat.id}`)}
                 >
                   <img src={cat.iconeUrl} alt={cat.nom} className={styles.iconeCategorie} />
                   <span>{cat.nom}</span>
@@ -60,8 +60,8 @@ export default function Accueil() {
             <h3>Promotions Exceptionnelles — Jusqu'à -20% sur tout le stock</h3>
             <p>Offres limitées · Expédition sous 48h · Paiement en 3x sans frais</p>
           </div>
-          <button 
-            className={styles.bannierePromoBtn} 
+          <button
+            className={styles.bannierePromoBtn}
             onClick={() => navigate('/produits?promotion=true')}
           >
             Voir les offres
@@ -74,7 +74,7 @@ export default function Accueil() {
         <div className={styles.container}>
           <div className={styles.enteteSection}>
             <h2 className={styles.titre}>Produits en Promotion</h2>
-            <button className={styles.btnVoirTout} onClick={() => navigate('/produits?promotion=true')}>
+            <button className={styles.btnVoirTout} onClick={() => navigate('/catalogue?promotion=true')}>
               Voir tout →
             </button>
           </div>
